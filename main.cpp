@@ -21,7 +21,7 @@ struct Device
 	}
 };
 
-std::wstring s2ws(const std::string& s)
+std::wstring StringToWideString(const std::string& s)
 {
 	int len;
 	int slength = (int)s.length() + 1;
@@ -36,13 +36,13 @@ std::wstring s2ws(const std::string& s)
 void SetPrimaryDisplay(int ID)
 {
 	std::string params = "/SetPrimary " + std::to_string(ID);
-	ShellExecuteA(GetDesktopWindow(), "open", ".\\multimonitortool\\multimonitortool.exe", params.c_str(), NULL, SW_SHOW);
+	ShellExecuteA(NULL, "open", ".\\multimonitortool\\multimonitortool.exe", params.c_str(), NULL, SW_SHOW);
 }
 
 void SetPrimaryAudio(std::string name)
 {
 	std::string params = "setdefaultsounddevice " + name;
-	ShellExecuteA(GetDesktopWindow(), "open", ".\\nircmd\\nircmd.exe", params.c_str(), NULL, SW_SHOW);
+	ShellExecuteA(NULL, "open", ".\\nircmd\\nircmd.exe", params.c_str(), NULL, SW_SHOW);
 }
 
 void LaunchSteam(std::wstring steamPath)
@@ -53,7 +53,7 @@ void LaunchSteam(std::wstring steamPath)
 	SHELLEXECUTEINFO SteamExecInfo = { 0 };
 	SteamExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
 	SteamExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
-	SteamExecInfo.hwnd = GetDesktopWindow();
+	SteamExecInfo.hwnd = NULL;
 	SteamExecInfo.lpVerb = NULL;
 	SteamExecInfo.lpFile = SteamExec;
 	SteamExecInfo.lpParameters = SteamBigPictureArg.c_str();
@@ -79,7 +79,7 @@ int main()
 
 	SetPrimaryDisplay(TV.VideoID);
 	SetPrimaryAudio(TV.AudioName);
-	LaunchSteam(s2ws(SteamPath));
+	LaunchSteam(StringToWideString(SteamPath));
 	SetPrimaryDisplay(Monitor.VideoID);
 	SetPrimaryAudio(Monitor.AudioName);
 }
